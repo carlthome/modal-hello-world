@@ -3,10 +3,17 @@ import modal
 stub = modal.Stub("example-get-started")
 
 
-@stub.function()
+pytorch = modal.Image.from_dockerhub("pytorch/pytorch")
+
+
+@stub.function(image=pytorch)
 def square(x):
-    print("This code is running on a remote worker!")
-    return x**2
+    import torch
+
+    print(torch.__version__)
+
+    y = (torch.tensor(x) ** 2).item()
+    return y
 
 
 @stub.local_entrypoint()
